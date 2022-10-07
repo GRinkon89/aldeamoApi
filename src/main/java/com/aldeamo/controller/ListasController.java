@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,11 +19,18 @@ public class ListasController {
 	IListasService listasService;
 	
 	@PostMapping(value = "iterar")
-	public ResponseEntity<List<Integer>> iterarListas(@RequestBody EntradaDTO entradaDto){
+	public ResponseEntity<String> iterarListas(@RequestBody EntradaDTO entradaDto){
 		List<Integer> respuesta = new ArrayList<Integer>();
 		respuesta= listasService.iterarListas(entradaDto.getIteraciones(), entradaDto.getIdPila());
-		ResponseEntity<List<Integer>> listaRespuesta = new ResponseEntity<>(respuesta, HttpStatus.OK);
-		return  listaRespuesta;		
+		if (respuesta != null) {
+			return ResponseEntity.ok(respuesta.toString());
+		}else {
+			return ResponseEntity.badRequest()
+            .body("Numero de pila no permitido, solo se permite de 1 a 5");
+		}
+		
+		
+		
 	}
 
 }
